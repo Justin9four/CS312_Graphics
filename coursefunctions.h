@@ -60,6 +60,7 @@ void GameOfLife(Buffer2D<PIXEL> & target)
                 {
                         // Clicking the mouse changes a pixel's color
                         SDL_GetMouseState(&mouseX, &mouseY);
+                        mouseY = S_HEIGHT - mouseY;
                         int gridX = mouseX / scaleFactor;
                         int gridY = mouseY / scaleFactor;
                         if(grid[gridY][gridX] == 1)
@@ -80,7 +81,64 @@ void GameOfLife(Buffer2D<PIXEL> & target)
         if(!isSetup)
         {
                 // Your Code goes here
-
+        int neighborCount;
+        for(int y = 0; y < gridH; y++)
+        {
+                for(int x = 0; x < gridW; x++)
+                {
+                        neighborCount = 0;
+                        if (x + 1 < gridW && grid[y][x + 1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (x - 1 > 0 && grid[y][x - 1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (y + 1 < gridH && grid[y + 1][x] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (y - 1 > 0 && grid[y - 1][x] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (grid[y+1][x+1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (grid[y+1][x-1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (grid[y-1][x-1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (grid[y-1][x+1] == 1)
+                        {
+                                neighborCount++;
+                        }
+                        if (grid[y][x] == 1)
+                        {
+                                if (neighborCount < 2)
+                                        gridTmp[y][x] = 0;
+                                else if (neighborCount < 4)
+                                        gridTmp[y][x] = 1;
+                                else if (neighborCount >= 4)
+                                        gridTmp[y][x] = 0;
+                        }
+                        else if (neighborCount == 3)
+                                gridTmp[y][x] = 1;
+                }
+        }
+        for(int y = 0; y < gridH; y++)
+        {
+                for(int x = 0; x < gridW; x++)
+                {
+                        grid[y][x] = gridTmp[y][x];
+                }
+        }        
                 // Wait a half-second between iterations
                 SDL_Delay(500);
         }
